@@ -1,0 +1,146 @@
+##Project Output
+
+SAMPLE OUTPUT (user input shown): ==> SERVER on cse06
+
+$ ./prog3svr
+usage: ./prog3svr <svr_port>
+
+$ ./prog3svr 8001
+Waiting for Incoming Connections... Client (5): Connection Accepted
+Client (5): Connection Handler Assigned
+Unable to Locate
+Unable to Locate
+Client (5): QUIT
+Unable to Locate
+Client (5): Disconnecting User.
+Client (6): Connection Accepted
+Client (6): Connection Handler Assigned Client (6): JOIN mat0299
+Client (5) in Database. Discarding LIST. Client (5) in Database. Discarding BCST.
+Client (5) in Database. Disconnecting User.
+Client (6): LIST
+Client (6): Unrecognizable Message. Discarding UNKNOWN Message. Client (5): Connection Accepted
+Client (5): Connection Handler Assigned
+Client (5): JOIN xyz0123
+Client (5): LIST
+Unable to Locate Recipient (brb5678) in Database. Discarding MESG. Client (7): Connection Accepted
+Client (7): Connection Handler Assigned
+Client (7): JOIN brb5678
+Client (7): LIST
+Client (6): LIST
+Client (5): QUIT
+Client (5): Disconnecting User.
+Client (6): QUIT
+Client (6): Disconnecting User.
+Client (7): QUIT
+Client (7): Disconnecting User.
+^C
+==> CLIENT 1 on cse05
+$ telnet cse06 8001
+Trying 129.120.151.99...
+Connected to cse06.cse.unt.edu.
+Escape character is '^]'.
+LIST
+Unregistered User. Use "JOIN <username>" to Register. BCST Is anyone there?
+Unregistered User. Use "JOIN <username>" to Register. QUIT
+Connection closed by foreign host.
+$ telnet cse06 8001
+Trying 129.120.151.99...
+Connected to cse06.cse.unt.edu. Escape character is '^]'.
+JOIN mat0299
+JOIN mat0299 Request Accepted LIST
+USERNAME FD
+----------------------------
+mat0299 6 
+----------------------------
+HELO
+Unknown Message. Discarding UNKNOWN Message. FROM xyz0123: Hello!
+FROM brb5678: Who else is on?
+LIST
+USERNAME FD
+----------------------------
+mat0299 6
+xyz0123 5
+brb5678 7 
+----------------------------
+QUIT
+Connection closed by foreign host.
+==> CLIENT 2 on cse04
+$ telnet cse06 8001
+Trying 129.120.151.99...
+Connected to cse06.cse.unt.edu.
+Escape character is '^]'.
+JOIN xyz0123
+JOIN xyz0123 Request Accepted
+LIST
+USERNAME FD 
+----------------------------
+mat0299 6
+xyz0123 5 
+----------------------------
+MESG mat0299 Hello!
+MESG brb5678 Are you there?
+Unknown Recipient (brb5678). MESG Discarded. FROM brb5678: I'm here!
+FROM brb5678: Who else is on?
+QUIT
+Connection closed by foreign host.
+==> CLIENT 3 on cse03
+$ telnet cse06 8001
+Trying 129.120.151.99... Connected to cse06.cse.unt.edu. Escape character is '^]'.
+JOIN brb5678
+
+JOIN brb5678 Request Accepted
+LIST
+USERNAME FD 
+---------------------------- 
+mat0299 6
+xyz0123 5
+brb5678 7 
+----------------------------
+MESG xyz0123 I'm here!
+BCST Who else is on?
+QUIT
+Connection closed by foreign host.
+The following SAMPLE OUTPUT documents when 10 users are currently registered with the service and 1 more client attempts to register (note that “register” implies a difference to “connection”). There are two cases here: (1) more than 10 users have connected, but not yet registered when the 11th client attempts to register, and (2) 10 users have connected and registered when the 11th client attempts to connect.
+==> SERVER on cse06
+...
+Client (25): Database Full. Disconnecting User. ...
+Error: Too Many Clients Connected
+...
+==> CLIENT 11 on cse04
+$ telnet cse06 8001
+Trying 129.120.151.99...
+Connected to cse06.cse.unt.edu. Escape character is '^]'.
+JOIN asd6789
+Too Many Users. Disconnecting User. Connection closed by foreign host. ...
+$ telnet cse06 8001
+Trying 129.120.151.99...
+Connected to cse06.cse.unt.edu. Escape character is '^]'. Connection closed by foreign host.
+
+The following SAMPLE OUTPUT documents when an already registered user sends another JOIN request with (1) the same username as well as (2) a different username.
+==> SERVER on cse06
+$ ./prog3svr 8001
+Waiting for Incoming Connections... Client (5): Connection Accepted Client (5): Handler Assigned
+
+Client (5): JOIN
+Client (5): PONG
+Client (5): LIST
+Client (5): User
+Client (5): User
+Client (5): LEAVE
+Client (5): Disconnecting User. ^C
+==> CLIENT 1 on cse04
+$ telnet cse06 8001
+Trying 129.120.151.99...
+Connected to cse06.cse.unt.edu.
+Escape character is '^]'.
+JOIN mat0299
+PING
+PONG
+LIST
+USERNAME FD
+----------------------------
+mat0299 5
+----------------------------
+JOIN mat0299
+User Already Registered: Username (mat0299), FD (5) QUIT
+Connection closed by foreign host.
